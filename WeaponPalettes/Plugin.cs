@@ -14,40 +14,30 @@ namespace WeaponPalettes
 	{
 		private static Plugin _instance;
 
-		private ConfigEntry<bool> _matchUid;
-		private ConfigEntry<bool> _matchOffhand;
-
-		public static bool MatchUid => Instance._matchUid.Value;
-		public static bool MatchOffhand => Instance._matchOffhand.Value;
-
 		public static Plugin Instance
 		{
 			get => _instance == null ? throw new InvalidOperationException() : _instance;
 			private set => _instance = value;
 		}
+		
+		public static PluginSettings Settings { get; private set; }
+		
+		public static CharacterMap CharacterMap { get; private set; }
 
 		public new ManualLogSource Logger => base.Logger;
 
 		private void Awake()
 		{
-			Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
+			Logger.LogInfo($"{PluginInfo.PLUGIN_GUID} loaded");
 
 			Instance = this;
 
-			_matchUid = Config.Bind(
-				"General",
-				"matchUid",
-				false,
-				"True: Weapon sets are matched per weapon (more granular). False: Weapon sets are matched per weapon type (less granular).");
+			Settings = new PluginSettings(this);
 
-			_matchOffhand = Config.Bind(
-				"General",
-				"matchOffhand",
-				false,
-				"True: Weapon sets are matched using both secondary and primary weapons (more granular). False: Weapon sets are matched using only the primary weapon (less granular).");
+			Logger.LogDebug($"matchUid: {Settings.MatchUid}");
+			Logger.LogDebug($"matchOffhand: {Settings.MatchOffHand}");
 
-			Logger.LogDebug($"matchUid: {_matchUid.Value}");
-			Logger.LogDebug($"matchOffhand: {_matchOffhand.Value}");
+			CharacterMap = new CharacterMap();
 
 			Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
 		}

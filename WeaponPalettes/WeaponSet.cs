@@ -7,10 +7,10 @@ namespace WeaponPalettes
 	public struct WeaponSet
 	{
 		private static string GetWeaponType(Weapon weapon, bool isOffhand) =>
-			weapon != null && !isOffhand || Plugin.MatchOffhand ? weapon.Type.ToString() : string.Empty;
+			weapon != null && !isOffhand || Plugin.Settings.MatchOffHand ? weapon.Type.ToString() : string.Empty;
 
 		private static string GetWeaponUid(Weapon weapon, bool isOffhand) =>
-			weapon != null && Plugin.MatchUid && (!isOffhand || Plugin.MatchOffhand) ? weapon.UID : string.Empty;
+			weapon != null && Plugin.Settings.MatchUid && (!isOffhand || Plugin.Settings.MatchOffHand) ? weapon.UID : string.Empty;
 
 		public static WeaponSet FromCharacter(Character character)
 		{

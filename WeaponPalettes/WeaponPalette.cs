@@ -1,32 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace WeaponPalettes
 {
 	public class WeaponPalette
 	{
-		public readonly Dictionary<int, string> ItemUids = new();
-
-		public void ApplyToCharacter(Character character)
+		public struct Datum
 		{
-			var quickSlotManager = character.QuickSlotMngr;
+			public WeaponSet WeaponSet;
+			public string ItemUid;
+			public int Index;
+		}
 
-			for (var index = 0; index < quickSlotManager.QuickSlotCount; ++index)
-			{
-				quickSlotManager.ClearQuickSlot(index);
-			}
+		public readonly Dictionary<int, string> QuickSlots = new();
 
-			for (var index = 0; index < quickSlotManager.QuickSlotCount; ++index)
-			{
-				if (!ItemUids.TryGetValue(index, out var itemUid))
-					continue;
-
-				var item = ItemManager.Instance.GetItem(itemUid);
-				if (item != null)
-					quickSlotManager.SetQuickSlot(index, item);
-			}
-			
-			quickSlotManager.RefreshQuickSlots();
+		public IEnumerable<Datum> Export(WeaponSet weaponSet)
+		{
+			return QuickSlots.Select(pair => new Datum {WeaponSet = weaponSet, ItemUid = pair.Value, Index = pair.Key});
 		}
 	}
 }
