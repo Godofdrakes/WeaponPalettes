@@ -10,19 +10,25 @@ using HarmonyLib;
 namespace WeaponPalettes
 {
 	[BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
+	[BepInDependency("com.sinai.SideLoader", "3.5.5")]
 	public class Plugin : BaseUnityPlugin
 	{
 		private static Plugin _instance;
+		private static CharacterMap _characterMap;
 
 		public static Plugin Instance
 		{
-			get => _instance == null ? throw new InvalidOperationException() : _instance;
+			get => _instance ? _instance : throw Util.InvalidOperation();
 			private set => _instance = value;
 		}
 		
 		public static PluginSettings Settings { get; private set; }
-		
-		public static CharacterMap CharacterMap { get; private set; }
+
+		public static CharacterMap CharacterMap
+		{
+			get => _characterMap ?? throw Util.InvalidOperation();
+			private set => _characterMap = value;
+		}
 
 		public new ManualLogSource Logger => base.Logger;
 

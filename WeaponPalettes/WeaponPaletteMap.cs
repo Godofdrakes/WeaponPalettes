@@ -23,7 +23,7 @@ namespace WeaponPalettes
 
 		public IEnumerable<KeyValuePair<int, string>> GetQuickSlots(WeaponSet weaponSet)
 		{
-			return GetWeaponPalette(weaponSet)?.QuickSlots.AsEnumerable();
+			return GetWeaponPalette(weaponSet)?.QuickSlots.AsEnumerable() ?? Array.Empty<KeyValuePair<int, string>>();
 		}
 
 		public IEnumerable<WeaponPalette.Datum> Export() =>

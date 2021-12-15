@@ -11,11 +11,11 @@ namespace WeaponPalettes
 
 		private bool _bypass;
 
-		public WeaponPaletteMap GetWeaponPalettes(Character character)
+		private WeaponPaletteMap GetWeaponPalettes(Character character)
 		{
 			if (!_weaponPalettes.TryGetValue(character.UID, out var weaponPalettes))
 			{
-				_weaponPalettes[character.UID] = weaponPalettes = new WeaponPaletteMap();
+				weaponPalettes = _weaponPalettes[character.UID] = new WeaponPaletteMap();
 			}
 
 			return weaponPalettes;
@@ -25,7 +25,7 @@ namespace WeaponPalettes
 		{
 			var weaponSet = UpdateWeaponSet(character);
 
-			Plugin.Instance.Logger.LogDebug($"[Change] Character: {character.Name}, MainHand: {weaponSet.MainHand}, OffHand: {weaponSet.OffHand}");
+			Plugin.Instance.Logger.LogInfo($"[Change] Character: {character.Name}, MainHand: {weaponSet.MainHand}, OffHand: {weaponSet.OffHand}");
 
 			LoadWeaponPalette(character, weaponSet);
 		}
@@ -34,7 +34,7 @@ namespace WeaponPalettes
 		{
 			if (_bypass) return;
 
-			Plugin.Instance.Logger.LogDebug($"[Set] Character: {character.Name}, Item: {item.Name}, Index:{index}");
+			Plugin.Instance.Logger.LogInfo($"[Set] Character: {character.Name}, Item: {item.Name}, Index:{index}");
 
 			var weaponSet = GetWeaponSet(character);
 			var weaponPalettes = GetWeaponPalettes(character);
@@ -47,7 +47,7 @@ namespace WeaponPalettes
 		{
 			if (_bypass) return;
 
-			Plugin.Instance.Logger.LogDebug($"[Clear] Character: {character.Name}, Index:{index}");
+			Plugin.Instance.Logger.LogInfo($"[Clear] Character: {character.Name}, Index:{index}");
 
 			var weaponSet = GetWeaponSet(character);
 			var weaponPalettes = GetWeaponPalettes(character);
@@ -56,7 +56,7 @@ namespace WeaponPalettes
 			weaponPalette?.QuickSlots.Remove(index);
 		}
 
-		public WeaponSet GetWeaponSet(Character character) => _weaponSets[character.UID];
+		private WeaponSet GetWeaponSet(Character character) => _weaponSets[character.UID];
 
 		private static string GetWeaponId(Weapon weapon)
 		{
@@ -104,8 +104,16 @@ namespace WeaponPalettes
 
 		private void LoadWeaponPalette(Character character, WeaponSet weaponSet)
 		{
+			if (character is null)
+				throw Util.NullParam(nameof(character));
+
 			var weaponPalettes = GetWeaponPalettes(character);
+			if (weaponPalettes is null)
+				throw Util.PluginException("weaponPalettes is null");
+			
 			var quickSlotManager = character.QuickSlotMngr;
+			if (quickSlotManager is null)
+				throw Util.PluginException("quickSlotManager is null");
 
 			_bypass = true;
 
