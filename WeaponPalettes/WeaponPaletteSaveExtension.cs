@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using JetBrains.Annotations;
 using SideLoader.SaveData;
 
 namespace WeaponPalettes
 {
-	[UsedImplicitly]
 	public class WeaponPaletteSaveExtension : PlayerSaveExtension
 	{
 		public List<WeaponPalette.Datum> Data = new();

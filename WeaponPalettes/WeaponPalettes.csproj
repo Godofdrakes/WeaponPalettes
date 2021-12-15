@@ -23,10 +23,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="SideLoader">
-        <HintPath>.\lib\SideLoader.dll</HintPath>
-        <Private>false</Private>
-      </Reference>
       <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
         <HintPath>..\..\..\..\SteamLibrary\steamapps\common\Outward\Outward_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
       </Reference>
