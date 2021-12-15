@@ -23,13 +23,9 @@ namespace WeaponPalettes
 
 		public void WeaponSetChanged(Character character)
 		{
-			Plugin.Instance.Logger.LogDebug($"[Change] Character: {character.Name}");
-
-			// Plugin.Instance.Logger.LogInfo($"Weapon: {(__instance.CurrentWeapon ? __instance.CurrentWeapon.Name : "none")}, Type: {(__instance.CurrentWeapon ? __instance.CurrentWeapon.Type.ToString() : "none")}");
-			// Plugin.Instance.Logger.LogInfo($"Offhand: {(__instance.LeftHandWeapon ? __instance.LeftHandWeapon.Name : "none")}, Type: {(__instance.LeftHandWeapon ? __instance.LeftHandWeapon.Type.ToString() : "none")}");
-			// Plugin.Instance.Logger.LogInfo($"Equipment: {(__instance.LeftHandEquipment ? __instance.LeftHandEquipment.Name : "none")}");
-
 			var weaponSet = UpdateWeaponSet(character);
+
+			Plugin.Instance.Logger.LogDebug($"[Change] Character: {character.Name}, MainHand: {weaponSet.MainHand}, OffHand: {weaponSet.OffHand}");
 
 			LoadWeaponPalette(character, weaponSet);
 		}
@@ -62,9 +58,9 @@ namespace WeaponPalettes
 
 		public WeaponSet GetWeaponSet(Character character) => _weaponSets[character.UID];
 
-		private static string GetWeaponType(Weapon weapon)
+		private static string GetWeaponId(Weapon weapon)
 		{
-			return weapon != null ? weapon.Type.ToString() : string.Empty;
+			return weapon != null ? Plugin.Settings.MatchUid ? weapon.UID : weapon.Type.ToString() : string.Empty;
 		}
 
 		private WeaponSet UpdateWeaponSet(Character character)
@@ -78,7 +74,7 @@ namespace WeaponPalettes
 
 				if (Plugin.Settings.MatchMainHand || (weapon.TwoHanded && Plugin.Settings.MatchOffHand))
 				{
-					mainHand = Plugin.Settings.MatchUid ? weapon.UID : GetWeaponType(weapon);
+					mainHand = GetWeaponId(weapon);
 				}
 			}
 
@@ -88,7 +84,7 @@ namespace WeaponPalettes
 
 				if (Plugin.Settings.MatchOffHand)
 				{
-					offHand = Plugin.Settings.MatchUid ? weapon.UID : GetWeaponType(weapon);
+					offHand = GetWeaponId(weapon);
 				}
 			}
 			else if (character.LeftHandEquipment != null)
@@ -99,7 +95,7 @@ namespace WeaponPalettes
 				{
 					// Lanterns and stuff
 					// @todo: equipment can only be matched by UID
-					offHand = character.LeftHandEquipment.UID;
+					offHand = equipment.UID;
 				}
 			}
 
