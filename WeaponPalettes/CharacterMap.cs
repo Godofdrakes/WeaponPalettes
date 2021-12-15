@@ -29,29 +29,31 @@ namespace WeaponPalettes
 			// Plugin.Instance.Logger.LogInfo($"Offhand: {(__instance.LeftHandWeapon ? __instance.LeftHandWeapon.Name : "none")}, Type: {(__instance.LeftHandWeapon ? __instance.LeftHandWeapon.Type.ToString() : "none")}");
 			// Plugin.Instance.Logger.LogInfo($"Equipment: {(__instance.LeftHandEquipment ? __instance.LeftHandEquipment.Name : "none")}");
 
-			var weaponSet = _weaponSets[character.UID] = WeaponSet.FromCharacter(character);
+			var weaponSet = UpdateWeaponSet(character);
 
 			LoadWeaponPalette(character, weaponSet);
 		}
 
-		public void SetQuickSlot(Character character, WeaponSet weaponSet, Item item, int index)
+		public void SetQuickSlot(Character character, Item item, int index)
 		{
 			if (_bypass) return;
 
 			Plugin.Instance.Logger.LogDebug($"[Set] Character: {character.Name}, Item: {item.Name}, Index:{index}");
 
+			var weaponSet = GetWeaponSet(character);
 			var weaponPalettes = GetWeaponPalettes(character);
 			var weaponPalette = weaponPalettes.GetOrAddWeaponPalette(weaponSet);
 
 			weaponPalette.QuickSlots[index] = item.UID;
 		}
 
-		public void ClearQuickSlot(Character character, WeaponSet weaponSet, int index)
+		public void ClearQuickSlot(Character character, int index)
 		{
 			if (_bypass) return;
 
 			Plugin.Instance.Logger.LogDebug($"[Clear] Character: {character.Name}, Index:{index}");
 
+			var weaponSet = GetWeaponSet(character);
 			var weaponPalettes = GetWeaponPalettes(character);
 			var weaponPalette = weaponPalettes.GetWeaponPalette(weaponSet);
 
@@ -59,6 +61,50 @@ namespace WeaponPalettes
 		}
 
 		public WeaponSet GetWeaponSet(Character character) => _weaponSets[character.UID];
+
+		private static string GetWeaponType(Weapon weapon)
+		{
+			return weapon != null ? weapon.Type.ToString() : string.Empty;
+		}
+
+		private WeaponSet UpdateWeaponSet(Character character)
+		{
+			var mainHand = string.Empty;
+			var offHand = string.Empty;
+
+			if (character.CurrentWeapon != null)
+			{
+				var weapon = character.CurrentWeapon;
+
+				if (Plugin.Settings.MatchMainHand || (weapon.TwoHanded && Plugin.Settings.MatchOffHand))
+				{
+					mainHand = Plugin.Settings.MatchUid ? weapon.UID : GetWeaponType(weapon);
+				}
+			}
+
+			if (character.LeftHandWeapon != null)
+			{
+				var weapon = character.LeftHandWeapon;
+
+				if (Plugin.Settings.MatchOffHand)
+				{
+					offHand = Plugin.Settings.MatchUid ? weapon.UID : GetWeaponType(weapon);
+				}
+			}
+			else if (character.LeftHandEquipment != null)
+			{
+				var equipment = character.LeftHandEquipment;
+
+				if (Plugin.Settings.MatchOffHand)
+				{
+					// Lanterns and stuff
+					// @todo: equipment can only be matched by UID
+					offHand = character.LeftHandEquipment.UID;
+				}
+			}
+
+			return _weaponSets[character.UID] = new WeaponSet(mainHand, offHand);
+		}
 
 		private void LoadWeaponPalette(Character character, WeaponSet weaponSet)
 		{

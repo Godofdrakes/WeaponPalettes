@@ -6,69 +6,33 @@ namespace WeaponPalettes
 	[Serializable]
 	public struct WeaponSet
 	{
-		private static string GetWeaponType(Weapon weapon, bool isOffhand) =>
-			weapon != null && !isOffhand || Plugin.Settings.MatchOffHand ? weapon.Type.ToString() : string.Empty;
-
-		private static string GetWeaponUid(Weapon weapon, bool isOffhand) =>
-			weapon != null && Plugin.Settings.MatchUid && (!isOffhand || Plugin.Settings.MatchOffHand) ? weapon.UID : string.Empty;
-
-		public static WeaponSet FromCharacter(Character character)
+		public WeaponSet(string mainHand, string offHand)
 		{
-			var weaponType = GetWeaponType(character.CurrentWeapon, false);
-			var weaponUid = GetWeaponUid(character.CurrentWeapon, false);
-			var offhandType = GetWeaponType(character.LeftHandWeapon, true);
-			var offhandUid = GetWeaponUid(character.LeftHandWeapon, true);
-			return new WeaponSet(weaponType, weaponUid, offhandType, offhandUid);
+			MainHand = mainHand;
+			OffHand = offHand;
 		}
 
-		public WeaponSet(
-			string weaponType,
-			string weaponUid,
-			string offhandType,
-			string offhandUid)
-		{
-			WeaponType = weaponType;
-			WeaponUid = weaponUid;
-			OffhandType = offhandType;
-			OffhandUid = offhandUid;
-		}
+		[DataMember] public readonly string MainHand;
 
-		[DataMember]
-		public readonly string WeaponType;
-
-		[DataMember]
-		public readonly string WeaponUid;
-
-		[DataMember]
-		public readonly string OffhandType;
-
-		[DataMember]
-		public readonly string OffhandUid;
-
-		public override int GetHashCode()
-		{
-			unchecked
-			{
-				var hashCode = StringComparer.CurrentCultureIgnoreCase.GetHashCode(WeaponType);
-				hashCode = (hashCode * 397) ^ StringComparer.CurrentCultureIgnoreCase.GetHashCode(WeaponUid);
-				hashCode = (hashCode * 397) ^ StringComparer.CurrentCultureIgnoreCase.GetHashCode(OffhandType);
-				hashCode = (hashCode * 397) ^ StringComparer.CurrentCultureIgnoreCase.GetHashCode(OffhandUid);
-				return hashCode;
-			}
-		}
+		[DataMember] public readonly string OffHand;
 
 		public bool Equals(WeaponSet other)
 		{
-			return
-				string.Equals(WeaponType, other.WeaponType, StringComparison.CurrentCultureIgnoreCase) &&
-				string.Equals(WeaponUid, other.WeaponUid, StringComparison.CurrentCultureIgnoreCase) &&
-				string.Equals(OffhandType, other.OffhandType, StringComparison.CurrentCultureIgnoreCase) &&
-				string.Equals(OffhandUid, other.OffhandUid, StringComparison.CurrentCultureIgnoreCase);
+			return MainHand == other.MainHand && OffHand == other.OffHand;
 		}
 
 		public override bool Equals(object obj)
 		{
 			return obj is WeaponSet other && Equals(other);
+		}
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				return ((MainHand != null ? MainHand.GetHashCode() : 0) * 397) ^
+				       (OffHand != null ? OffHand.GetHashCode() : 0);
+			}
 		}
 	}
 }

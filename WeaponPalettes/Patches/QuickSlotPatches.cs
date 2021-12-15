@@ -14,9 +14,7 @@ namespace WeaponPalettes.Patches
 			if (!Util.IsLocalPlayer(character))
 				return;
 
-			var weaponSet = Plugin.CharacterMap.GetWeaponSet(character);
-
-			Plugin.CharacterMap.ClearQuickSlot(character, weaponSet, __instance.Index);
+			Plugin.CharacterMap.ClearQuickSlot(character, __instance.Index);
 		}
 		
 		[HarmonyPatch(nameof(QuickSlot.SetQuickSlot))]
@@ -28,9 +26,7 @@ namespace WeaponPalettes.Patches
 			if (!Util.IsLocalPlayer(character))
 				return;
 
-			var weaponSet = Plugin.CharacterMap.GetWeaponSet(character);
-
-			Plugin.CharacterMap.SetQuickSlot(character, weaponSet, _item, __instance.Index);
+			Plugin.CharacterMap.SetQuickSlot(character, _item, __instance.Index);
 		}
 	}
 }
