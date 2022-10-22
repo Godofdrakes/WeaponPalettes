@@ -30,8 +30,5 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </AdditionalFiles>
       <None Remove="README.md" />
-      <AdditionalFiles Include="README.md">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </AdditionalFiles>
     </ItemGroup>
 </Project>
