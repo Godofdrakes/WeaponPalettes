@@ -13,6 +13,7 @@ namespace WeaponPalettes.Model
 
 		private bool TryGetPaletteMap(Character character, out WeaponPaletteMap? palette)
 		{
+			if (character is null) throw ExHelper.ArgumentNull(nameof(character));
 			return CharacterWeaponPaletteMaps.TryGetValue(character.UID, out palette);
 		}
 
@@ -57,8 +58,7 @@ namespace WeaponPalettes.Model
 
 		public void LoadWeaponPalette(Character character, WeaponSet weaponSet)
 		{
-			if (character is null)
-				throw new ArgumentNullException(nameof(character));
+			if (character is null) throw ExHelper.ArgumentNull(nameof(character));
 
 			var paletteMap = GetOrAddPaletteMap(character);
 			var palette = paletteMap.GetOrAddPalette(weaponSet);
@@ -72,7 +72,13 @@ namespace WeaponPalettes.Model
 
 		public void Import(Character character, IEnumerable<SavedQuickSlot> saveData)
 		{
+			if (character is null) throw ExHelper.ArgumentNull(nameof(character));
+			if (saveData is null) throw ExHelper.ArgumentNull(nameof(saveData));
+
 			var paletteMap = GetOrAddPaletteMap(character);
+
+			if (paletteMap is null)
+				throw new NullReferenceException(nameof(paletteMap));
 
 			paletteMap.Reset();
 
@@ -83,7 +89,7 @@ namespace WeaponPalettes.Model
 			}
 		}
 
-		public IReadOnlyCollection<SavedQuickSlot> Export(Character character)
+		public IEnumerable<SavedQuickSlot> Export(Character character)
 		{
 			var list = new List<SavedQuickSlot>();
 

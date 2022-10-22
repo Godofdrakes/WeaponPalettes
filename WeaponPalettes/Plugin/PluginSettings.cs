@@ -6,11 +6,11 @@ namespace WeaponPalettes.Plugin
 	{
 		public static PluginSettings Load(BaseUnityPlugin plugin)
 		{
-			var _matchType = plugin.Config.Bind("General", nameof(MatchType), true, MATCH_TYPE_DESCRIPTION);
-			var _matchMainHand = plugin.Config.Bind("General", nameof(MatchMainHand), true, MATCH_MAIN_DESCRIPTION);
-			var _matchOffHand = plugin.Config.Bind("General", nameof(MatchOffHand), false, MATCH_OFF_DESCRIPTION);
-			var _fakeEmptyHand = plugin.Config.Bind("General", nameof(FakeEmptyHand), true, FAKE_EMPTY_DESCRIPTION);
-			return new PluginSettings(_matchType.Value, _matchMainHand.Value, _matchOffHand.Value, _fakeEmptyHand.Value);
+			var matchType = plugin.Config.Bind("General", nameof(MatchType), true, MATCH_TYPE_DESCRIPTION)!;
+			var matchMainHand = plugin.Config.Bind("General", nameof(MatchMainHand), true, MATCH_MAIN_DESCRIPTION)!;
+			var matchOffHand = plugin.Config.Bind("General", nameof(MatchOffHand), false, MATCH_OFF_DESCRIPTION)!;
+			var fakeEmptyHand = plugin.Config.Bind("General", nameof(FakeEmptyHand), true, FAKE_EMPTY_DESCRIPTION)!;
+			return new PluginSettings(matchType.Value, matchMainHand.Value, matchOffHand.Value, fakeEmptyHand.Value);
 		}
 
 		private const string MATCH_TYPE_DESCRIPTION = @"Should items be matched by type (sword, axe, staff, ect.) or by name? Equipment (such as lanterns) are always matched by name.";

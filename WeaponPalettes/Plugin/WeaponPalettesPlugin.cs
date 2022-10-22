@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using BepInEx;
 using HarmonyLib;
@@ -51,14 +52,27 @@ namespace WeaponPalettes.Plugin
 		{
 			Logger.LogInfo($"[OnLoad] Character:{character.Name}");
 			Logger.LogInfo($"[OnLoad] Loading {savedQuickSlots.Count} SavedQuickSlot instances");
+
+			foreach (var quickSlot in savedQuickSlots)
+			{
+				Logger.LogDebug($"[OnLoad] WeaponSet:{quickSlot.WeaponSet}, Item:{quickSlot.Item}, Index:{quickSlot.Index}");
+			}
+
 			CharacterMap.Import(character, savedQuickSlots);
 		}
 
 		private void OnSave(Character character, Action<IEnumerable<SavedQuickSlot>> addSavedQuickSlots)
 		{
 			Logger.LogInfo($"[OnSave] Character:{character.Name}");
-			var savedQuickSlots = CharacterMap.Export(character);
+
+			var savedQuickSlots = CharacterMap.Export(character).ToList();
 			Logger.LogInfo($"[OnLoad] Saving {savedQuickSlots.Count} SavedQuickSlot instances");
+
+			foreach (var quickSlot in savedQuickSlots)
+			{
+				Logger.LogDebug($"[OnLoad] WeaponSet:{quickSlot.WeaponSet}, Item:{quickSlot.Item}, Index:{quickSlot.Index}");
+			}
+
 			addSavedQuickSlots.Invoke(savedQuickSlots);
 		}
 
@@ -79,7 +93,7 @@ namespace WeaponPalettes.Plugin
 		private void OnWeaponSetChanged(Character character)
 		{
 			var weaponSet = MakeWeaponSet(character, Settings);
-			Logger.LogDebug($"[OnQuickSlotChanged] Character:{character.Name}, WeaponSet:{weaponSet}");
+			Logger.LogInfo($"[OnQuickSlotChanged] Character:{character.Name}, WeaponSet:{weaponSet}");
 			CharacterMap.LoadWeaponPalette(character, weaponSet);
 		}
 
@@ -87,7 +101,7 @@ namespace WeaponPalettes.Plugin
 		{
 			if (!Settings.FakeEmptyHand) return;
 			var weaponSet = character.Sheathed ? WeaponSet.Empty : MakeWeaponSet(character, Settings);
-			Logger.LogDebug($"[OnSheatheInput] Character:{character.Name}, WeaponSet:{weaponSet}");
+			Logger.LogInfo($"[OnSheatheInput] Character:{character.Name}, WeaponSet:{weaponSet}");
 			CharacterMap!.LoadWeaponPalette(character, weaponSet);
 		}
 

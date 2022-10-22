@@ -8,6 +8,11 @@ namespace WeaponPalettes.Model
 		[property: DataMember] string MainHand,
 		[property: DataMember] string OffHand)
 	{
-		public static WeaponSet Empty { get; } = new(string.Empty, string.Empty);
+		public static WeaponSet Empty { get; } = new();
+
+		public WeaponSet() : this(string.Empty, string.Empty)
+		{
+			
+		}
 	}
 }

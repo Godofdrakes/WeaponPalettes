@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace WeaponPalettes.Model
@@ -14,17 +15,21 @@ namespace WeaponPalettes.Model
 
 		public bool TryGetPalette(WeaponSet weaponSet, out WeaponPalette? weaponPalette)
 		{
+			if (weaponSet is null) throw ExHelper.ArgumentNull(nameof(weaponSet));
 			return WeaponPalettes.TryGetValue(weaponSet, out weaponPalette);
 		}
 
 		public WeaponPalette GetOrAddPalette(WeaponSet weaponSet)
 		{
-			if (TryGetPalette(weaponSet, out var weaponPalette))
-				return weaponPalette!;
+			if (weaponSet is null) throw ExHelper.ArgumentNull(nameof(weaponSet));
 
-			weaponPalette = new WeaponPalette();
-			WeaponPalettes[weaponSet] = weaponPalette;
-			return weaponPalette;
+			if (!TryGetPalette(weaponSet, out var weaponPalette))
+			{
+				weaponPalette = new WeaponPalette();
+				WeaponPalettes[weaponSet] = weaponPalette;
+			}
+
+			return weaponPalette!;
 		}
 
 		public void Reset()
@@ -34,6 +39,6 @@ namespace WeaponPalettes.Model
 		}
 
 		public IEnumerable<SavedQuickSlot> Export() => WeaponPalettes.SelectMany(pair => pair.Value.Export()
-				.Select(tuple => new SavedQuickSlot(pair.Key, tuple.item, tuple.index)));
+			.Select(tuple => new SavedQuickSlot { WeaponSet = pair.Key, Item = tuple.item, Index = tuple.index }));
 	}
 }
