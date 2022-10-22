@@ -25,5 +25,13 @@
       <AdditionalFiles Include="manifest.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </AdditionalFiles>
+      <None Remove="icon.png" />
+      <AdditionalFiles Include="icon.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </AdditionalFiles>
+      <None Remove="README.md" />
+      <AdditionalFiles Include="README.md">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </AdditionalFiles>
     </ItemGroup>
 </Project>
