@@ -1,20 +1,24 @@
-﻿using HarmonyLib;
+﻿using System;
+using HarmonyLib;
+
+// ReSharper disable InconsistentNaming
 
 namespace WeaponPalettes.Patches
 {
 	[HarmonyPatch(typeof(QuickSlot))]
 	public class QuickSlotPatches
 	{
+		public static event Action<Character, int, Item?>? QuickSlotChanged; 
+
 		[HarmonyPatch(nameof(QuickSlot.Clear))]
 		[HarmonyPostfix]
-		public static void SetQuickSlot(QuickSlot __instance)
+		public static void ClearQuickSlot(QuickSlot __instance)
 		{
 			var character = __instance.OwnerCharacter;
-
-			if (!Util.IsLocalPlayer(character))
+			if (!character.IsValidLocalPlayer())
 				return;
 
-			Plugin.CharacterMap.ClearQuickSlot(character, __instance.Index);
+			QuickSlotChanged?.Invoke(character, __instance.Index, null);
 		}
 		
 		[HarmonyPatch(nameof(QuickSlot.SetQuickSlot))]
@@ -22,11 +26,10 @@ namespace WeaponPalettes.Patches
 		public static void SetQuickSlot(QuickSlot __instance, Item _item)
 		{
 			var character = __instance.OwnerCharacter;
-
-			if (!Util.IsLocalPlayer(character))
+			if (!character.IsValidLocalPlayer())
 				return;
 
-			Plugin.CharacterMap.SetQuickSlot(character, _item, __instance.Index);
+			QuickSlotChanged?.Invoke(character, __instance.Index, _item);
 		}
 	}
 }

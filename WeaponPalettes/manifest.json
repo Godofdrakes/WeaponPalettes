@@ -1,0 +1,10 @@
+﻿{
+  "name": "WeaponPalettes",
+  "version_number": "1.1.0",
+  "website_url": "https://github.com/Godofdrakes/WeaponPalettes",
+  "description": "A mod for Outward to enable per-weapon quickslots",
+  "dependencies": [
+    "BepInEx-BepInExPack_Outward-5.4.19",
+    "sinai-dev-SideLoader-3.8.4"
+  ]
+}

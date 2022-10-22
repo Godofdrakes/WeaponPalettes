@@ -1,20 +1,35 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using HarmonyLib;
+
+// ReSharper disable InconsistentNaming
 
 namespace WeaponPalettes.Patches
 {
 	[HarmonyPatch(typeof(Character))]
 	public static class CharacterPatches
 	{
-		[HarmonyPatch("WeaponChanged")]
-		[HarmonyPatch("LeftHandChanged")]
+		public static event Action<Character>? WeaponSetChanged;
+		public static event Action<Character>? SheatheDone;
+
+		[HarmonyPatch(nameof(Character.WeaponChanged))]
+		[HarmonyPatch(nameof(Character.LeftHandChanged))]
 		[HarmonyPostfix]
-		public static void WeaponSetChanged(Character __instance)
+		public static void OnWeaponSetChanged(Character __instance)
 		{
-			if (!Util.IsLocalPlayer(__instance))
+			if (!__instance.IsValidLocalPlayer())
 				return;
-			
-			Plugin.CharacterMap.WeaponSetChanged(__instance);
+
+			WeaponSetChanged?.Invoke(__instance);
+		}
+
+		[HarmonyPatch(nameof(Character.SheatheDone))]
+		[HarmonyPostfix]
+		public static void OnSheatheDone(Character __instance)
+		{
+			if (!__instance.IsValidLocalPlayer())
+				return;
+
+			SheatheDone?.Invoke(__instance);
 		}
 	}
 }
