@@ -18,15 +18,6 @@ namespace WeaponPalettes.Model
 				if (!QuickSlots.TryGetValue(index, out var item))
 					continue;
 
-				// The item might have been destroyed by unity
-				if (item == null)
-				{
-					// @todo see if there's anything we can do about this
-					// I don't think there is
-					QuickSlots.Remove(index);
-					continue;
-				}
-
 				var itemDef = ItemManager.Instance.GetItem(item.ItemUid);
 				if (itemDef == null)
 				{
