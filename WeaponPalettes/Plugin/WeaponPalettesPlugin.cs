@@ -78,7 +78,9 @@ namespace WeaponPalettes.Plugin
 
 		private void OnQuickSlotChanged(Character character, int index, Item? item)
 		{
-			Logger.LogDebug($"[OnQuickSlotChanged] Character:{character.Name}, Index:{index}, Item:{(item != null ? item.Name : "null")}");
+			var itemName = item != null ? item.Name : "<null>";
+			var itemUid = item != null ? item.UID : "<invalid>";
+			Logger.LogDebug($"[OnQuickSlotChanged] Character:{character.Name}, Index:{index}, Item:{itemName}, UID:{itemUid}");
 
 			if (item is null)
 			{
@@ -99,8 +101,7 @@ namespace WeaponPalettes.Plugin
 
 		private void OnSheatheInput(Character character)
 		{
-			if (!Settings.FakeEmptyHand) return;
-			var weaponSet = character.Sheathed ? WeaponSet.Empty : MakeWeaponSet(character, Settings);
+			var weaponSet = MakeWeaponSet(character, Settings);
 			Logger.LogInfo($"[OnSheatheInput] Character:{character.Name}, WeaponSet:{weaponSet}");
 			CharacterMap!.LoadWeaponPalette(character, weaponSet);
 		}
@@ -118,7 +119,7 @@ namespace WeaponPalettes.Plugin
 			var mainHand = string.Empty;
 			var offHand = string.Empty;
 
-			if (settings.MatchMainHand)
+			if (settings.MatchMainHand && !(settings.FakeEmptyHand && character.Sheathed))
 			{
 				if (character.CurrentWeapon != null)
 				{
