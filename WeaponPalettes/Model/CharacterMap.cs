@@ -39,7 +39,7 @@ namespace WeaponPalettes.Model
 
 			var paletteMap = GetOrAddPaletteMap(character);
 			var weaponPalette = paletteMap.GetOrAddPalette(weaponSet!);
-			weaponPalette.SetItem(index, item.UID);
+			weaponPalette.SetItem(index, item);
 		}
 
 		public void ClearQuickSlot(Character character, int index)
@@ -64,7 +64,7 @@ namespace WeaponPalettes.Model
 			var palette = paletteMap.GetOrAddPalette(weaponSet);
 
 			IsLoading = true;
-			palette!.Apply(character.QuickSlotMngr);
+			palette.Apply(character.QuickSlotMngr);
 			IsLoading = false;
 
 			CharacterWeaponSets[character.UID] = weaponSet;
@@ -85,7 +85,7 @@ namespace WeaponPalettes.Model
 			foreach (var savedQuickSlot in saveData)
 			{
 				paletteMap.GetOrAddPalette(savedQuickSlot.WeaponSet)
-					.SetItem(savedQuickSlot.Index, savedQuickSlot.Item);
+					.SetItem(savedQuickSlot.Index, (savedQuickSlot.ItemId, savedQuickSlot.ItemUid));
 			}
 		}
 

@@ -1,6 +1,6 @@
 # Weapon Palettes
 
-A mod for Outward to enable per-weapon quickslots. I like the idea of multiple quickslot bars but really don't want to have to cucle between quickslot bars mid-combat so I built something more intuitive. This mod will automatically switch quickslot bars based on your currently equipped weapons.
+A mod for Outward to enable per-weapon quickslots. I like the idea of multiple quickslot bars but really don't want to have to cycle between quickslot bars mid-combat so I built something more intuitive. This mod will automatically switch quickslot bars based on your currently equipped weapons.
 
 # Install
 
@@ -28,7 +28,16 @@ Use [Thunderstore](https://outward.thunderstore.io/package/Godofdrakes/WeaponPal
 
 Thee are a few config settings that let you tweak how the mod tracks your weapon set
 
-- `matchUid`
-  - By default the mod considers different weapons of the same category (swords, bows, ect.) as the same weapon set. This makes setting up the quickbar simpler as finding a new sword doesn't then require reassigning your entire quickbar. Enabling this setting will cause weapons in the same category to be treated as different weapon sets.
-- `matchMainHand` / `matchOffHand`
-  - By default the mod only pays attention to your main hand weapon, ignoring your off hand item. This allows you to cycle between lanterns, torches, shields, and other off hand items without having to set up your quickslot bar for each. If you'd prefer your quickslot bar also (or only) be based on your off hand item you can change these values.
+- `MatchType`
+  - When enabled weapons of the same type (1H Swords, Polearms, Axes, ect.) will use the same set of quickslots
+  - Defaults to enabled
+- `MatchMainHand`
+  - When enabled the item in your main hand will be considered when deciding which set of quickslots to load
+  - Defaults to enabled
+- `MatchOffHand`
+  - When enabled the item in your off hand will be considered when deciding which set of quickslots to load
+  - This can be enabled in addition to MatchMainHand
+  - Defaults to disabled
+- 'FakeEmptyHand'
+  - When enabled if you sheathe your weapon it will treat that hand as empty and load the corresponding set of quickslots
+  - Defaults to enabled

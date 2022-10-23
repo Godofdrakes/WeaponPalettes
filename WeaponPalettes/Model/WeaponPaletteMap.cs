@@ -39,6 +39,12 @@ namespace WeaponPalettes.Model
 		}
 
 		public IEnumerable<SavedQuickSlot> Export() => WeaponPalettes.SelectMany(pair => pair.Value.Export()
-			.Select(tuple => new SavedQuickSlot { WeaponSet = pair.Key, Item = tuple.item, Index = tuple.index }));
+			.Select(tuple => new SavedQuickSlot
+			{
+				WeaponSet = pair.Key,
+				ItemUid = tuple.itemUid,
+				ItemId = tuple.itemId,
+				Index = tuple.index
+			}));
 	}
 }

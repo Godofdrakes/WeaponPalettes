@@ -6,7 +6,7 @@
         <Description>Weapon Palettes</Description>
         <Version>1.1.0</Version>
         <LangVersion>9.0</LangVersion>
-        <PackageVersion>1.1.0</PackageVersion>
+        <PackageVersion>1.2.0</PackageVersion>
         <Authors>GodofDrakes</Authors>
         <Nullable>enable</Nullable>
     </PropertyGroup>

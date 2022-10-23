@@ -5,7 +5,9 @@ namespace WeaponPalettes.Model
 {
 	public class WeaponPalette
 	{
-		private Dictionary<int, string> QuickSlots { get; } = new();
+		public record ItemData(int ItemId, string ItemUid);
+
+		private Dictionary<int, ItemData> QuickSlots { get; } = new();
 
 		public void Apply(CharacterQuickSlotManager quickSlotManager)
 		{
@@ -16,34 +18,53 @@ namespace WeaponPalettes.Model
 				if (!QuickSlots.TryGetValue(index, out var item))
 					continue;
 
-				var itemDef = ItemManager.Instance.GetItem(item);
-				if (item != null)
-					quickSlotManager.SetQuickSlot(index, itemDef);
+				// The item might have been destroyed by unity
+				if (item == null)
+				{
+					// @todo see if there's anything we can do about this
+					// I don't think there is
+					QuickSlots.Remove(index);
+					continue;
+				}
+
+				var itemDef = ItemManager.Instance.GetItem(item.ItemUid);
+				if (itemDef == null)
+				{
+					itemDef = ResourcesPrefabManager.Instance.GetItemPrefab(item.ItemId);
+				}
+
+				quickSlotManager.SetQuickSlot(index, itemDef);
 			}
 
 			quickSlotManager.RefreshQuickSlots();
 		}
 
-		public bool TryGetItem(int index, out string item)
+		public bool TryGetItem(int index, out string itemUid)
 		{
-			if (!QuickSlots.TryGetValue(index, out item))
+			if (!QuickSlots.TryGetValue(index, out var item))
 			{
-				item = string.Empty;
+				itemUid = string.Empty;
 				return false;
 			}
 
+			itemUid = item.ItemUid;
 			return true;
 		}
 
-		public void SetItem(int index, string? item)
+		public void SetItem(int index, Item? item)
 		{
-			if (string.IsNullOrEmpty(item))
+			if (item == null)
 			{
 				RemoveItem(index);
 				return;
 			}
 
-			QuickSlots[index] = item!;
+			QuickSlots[index] = new ItemData(item.ItemID, item.UID);
+		}
+
+		public void SetItem(int index, (int itemId, string itemUid) itemData)
+		{
+			QuickSlots[index] = new ItemData(itemData.itemId, itemData.itemUid);
 		}
 
 		public void RemoveItem(int index)
@@ -59,9 +80,9 @@ namespace WeaponPalettes.Model
 			}
 		}
 
-		public IEnumerable<(int index, string item)> Export()
+		public IEnumerable<(int index, int itemId, string itemUid)> Export()
 		{
-			return QuickSlots.Select(pair => (pair.Key, pair.Value));
+			return QuickSlots.Select(pair => (pair.Key, pair.Value.ItemId, pair.Value.ItemUid));
 		}
 	}
 }

@@ -55,7 +55,7 @@ namespace WeaponPalettes.Plugin
 
 			foreach (var quickSlot in savedQuickSlots)
 			{
-				Logger.LogDebug($"[OnLoad] WeaponSet:{quickSlot.WeaponSet}, Item:{quickSlot.Item}, Index:{quickSlot.Index}");
+				Logger.LogDebug($"[OnLoad] WeaponSet:{quickSlot.WeaponSet}, Item:{quickSlot.ItemId}, Index:{quickSlot.Index}");
 			}
 
 			CharacterMap.Import(character, savedQuickSlots);
@@ -70,7 +70,7 @@ namespace WeaponPalettes.Plugin
 
 			foreach (var quickSlot in savedQuickSlots)
 			{
-				Logger.LogDebug($"[OnLoad] WeaponSet:{quickSlot.WeaponSet}, Item:{quickSlot.Item}, Index:{quickSlot.Index}");
+				Logger.LogDebug($"[OnLoad] WeaponSet:{quickSlot.WeaponSet}, Item:{quickSlot.ItemId}, Index:{quickSlot.Index}");
 			}
 
 			addSavedQuickSlots.Invoke(savedQuickSlots);
