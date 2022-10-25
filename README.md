@@ -38,6 +38,6 @@ Thee are a few config settings that let you tweak how the mod tracks your weapon
   - When enabled the item in your off hand will be considered when deciding which set of quickslots to load
   - This can be enabled in addition to MatchMainHand
   - Defaults to disabled
-- 'FakeEmptyHand'
-  - When enabled if you sheathe your weapon it will treat that hand as empty and load the corresponding set of quickslots
+- `FakeEmptyHand`
+  - When enabled if you sheathe your weapon it will treat your main hand as empty, loading the corresponding set of quickslots
   - Defaults to enabled
